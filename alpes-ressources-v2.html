@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Alpes Ressources — Externalisation de la paie & accompagnement RH</title>
+	<meta name="description"
+		content="Depuis 2008, Alpes Ressources accompagne les entreprises dans l'externalisation de leur paie et le management de leurs ressources humaines. Le service avant tout.">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap"
+		rel="stylesheet">
+
+	<style>
+		/* ============================================================
+		   ALPES RESSOURCES — Design system (clair, sobre, moderne)
+		   ============================================================ */
+		:root {
+			--ink: #1a231d;          /* texte principal */
+			--muted: #59615a;        /* texte secondaire */
+			--muted-2: #828a82;      /* texte tertiaire / labels */
+			--bg: #ffffff;           /* fond dominant */
+			--bg-soft: #f5f7f3;      /* sections alternées, très clair */
+			--line: #e7eae3;         /* bordures discrètes */
+			--line-2: #dadfd4;
+			--forest: #1f3d30;       /* vert profond — boutons, footer */
+			--forest-2: #2a503f;
+			--lime: #9fc512;         /* accent de marque, rare */
+			--lime-deep: #5c7d0b;    /* accent texte (lisible AA) */
+			--on-dark: #e8ece5;
+			--on-dark-mut: #9ea89e;
+			--amber: #e8a93b;        /* étoiles */
+			--grid: rgba(31, 61, 48, .08);
+
+			--shadow-xs: 0 1px 2px rgba(26, 35, 29, .04);
+			--shadow-sm: 0 1px 3px rgba(26, 35, 29, .05), 0 8px 20px -16px rgba(26, 35, 29, .2);
+			--shadow-md: 0 14px 34px -18px rgba(26, 35, 29, .28);
+			--shadow-lg: 0 30px 60px -28px rgba(26, 35, 29, .38);
+
+			--radius: 16px;
+			--radius-lg: 22px;
+			--container: 1180px;
+			--ease-out: cubic-bezier(.23, 1, .32, 1);
+			--ease: cubic-bezier(.4, 0, .2, 1);
+		}
+
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+		body {
+			font-family: 'Hanken Grotesk', system-ui, sans-serif;
+			background: var(--bg); color: var(--ink);
+			line-height: 1.65; font-weight: 400; font-size: 17px;
+			-webkit-font-smoothing: antialiased; overflow-x: hidden;
+		}
+		::selection { background: var(--lime); color: var(--forest); }
+
+		h1, h2, h3, h4 { font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; color: var(--ink); }
+		a { color: inherit; text-decoration: none; }
+		img { display: block; max-width: 100%; }
+
+		:focus-visible { outline: 2.5px solid var(--lime-deep); outline-offset: 3px; border-radius: 4px; }
+
+		/* ---------- Helpers ---------- */
+		.container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 28px; }
+		.section { padding: clamp(4.5rem, 9vw, 7.5rem) 0; position: relative; }
+		.section > .container { position: relative; z-index: 1; }
+		.bg-soft { background: var(--bg-soft); }
+		.bg-soft::before {
+			content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+			background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+			background-size: 56px 56px;
+			-webkit-mask-image: radial-gradient(110% 80% at 50% 0%, #000, transparent 75%);
+			mask-image: radial-gradient(110% 80% at 50% 0%, #000, transparent 75%);
+		}
+		.bg-soft > .container { position: relative; z-index: 1; }
+
+		/* Grille de fond (profondeur) */
+		.grid-bg {
+			position: absolute; inset: 0; z-index: 0; pointer-events: none;
+			background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+			background-size: 56px 56px;
+			-webkit-mask-image: radial-gradient(95% 75% at 72% 8%, #000, transparent 72%);
+			mask-image: radial-gradient(95% 75% at 72% 8%, #000, transparent 72%);
+		}
+
+		.eyebrow {
+			display: inline-block; font-size: 13px; font-weight: 600;
+			letter-spacing: .14em; text-transform: uppercase; color: var(--lime-deep);
+		}
+
+		.sec-head { max-width: 680px; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+		.sec-head h2 { font-size: clamp(1.9rem, 4vw, 2.8rem); margin-top: 16px; }
+		.sec-head p { margin-top: 18px; color: var(--muted); font-size: 1.05rem; max-width: 56ch; }
+		.accent { color: var(--ink); font-weight: 600; }
+
+		/* ---------- Buttons ---------- */
+		.btn {
+			display: inline-flex; align-items: center; gap: 9px;
+			font-family: inherit; font-weight: 600; font-size: .98rem;
+			padding: 13px 22px; border-radius: 10px; cursor: pointer; border: 1px solid transparent;
+			transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease-out), box-shadow .25s var(--ease);
+		}
+		.btn svg { width: 17px; height: 17px; transition: transform .25s var(--ease-out); }
+		.btn-primary { background: var(--forest); color: #fff; }
+		.btn-primary:hover { background: #183025; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+		.btn-primary:hover svg { transform: translateX(3px); }
+		.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
+		.btn-ghost:hover { border-color: var(--ink); }
+		.btn-lime { background: var(--lime); color: var(--forest); }
+		.btn-lime:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+		.btn:active { transform: scale(.98); transition-duration: .08s; }
+
+		/* ============================================================
+		   HEADER
+		   ============================================================ */
+		.header {
+			position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 0;
+			transition: padding .35s var(--ease), background .35s var(--ease), box-shadow .35s var(--ease), border-color .35s var(--ease);
+			border-bottom: 1px solid transparent;
+		}
+		.header.scrolled {
+			background: rgba(255, 255, 255, .85);
+			backdrop-filter: blur(14px) saturate(150%); -webkit-backdrop-filter: blur(14px) saturate(150%);
+			padding: 11px 0; border-bottom: 1px solid var(--line); box-shadow: var(--shadow-xs);
+		}
+		.nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+		.logo { display: flex; align-items: center; gap: 11px; }
+		.logo-mark { width: 36px; height: 36px; flex: none; }
+		.logo-text { display: flex; flex-direction: column; line-height: 1; }
+		.logo-text .l1 { font-weight: 800; font-size: .98rem; letter-spacing: .14em; color: var(--forest); }
+		.logo-text .l2 { font-weight: 500; font-size: .62rem; letter-spacing: .3em; color: var(--muted-2); margin-top: 3px; }
+
+		.nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
+		.nav-links a { font-size: .96rem; font-weight: 500; color: var(--muted); transition: color .2s; }
+		.nav-links a:hover { color: var(--ink); }
+		.nav-cta { display: flex; align-items: center; gap: 12px; }
+
+		.burger { display: none; width: 44px; height: 44px; border: 1px solid var(--line-2); border-radius: 10px; background: transparent; cursor: pointer; position: relative; }
+		.burger span { position: absolute; left: 11px; right: 11px; height: 2px; background: var(--ink); transition: .3s var(--ease-out); }
+		.burger span:nth-child(1) { top: 15px; } .burger span:nth-child(2) { top: 21px; } .burger span:nth-child(3) { top: 27px; }
+		.burger.open span:nth-child(1) { top: 21px; transform: rotate(45deg); }
+		.burger.open span:nth-child(2) { opacity: 0; }
+		.burger.open span:nth-child(3) { top: 21px; transform: rotate(-45deg); }
+
+		.mobile-menu {
+			position: fixed; inset: 0 0 0 auto; width: min(340px, 84vw); z-index: 99;
+			background: #fff; transform: translateX(100%); transition: transform .4s var(--ease-out);
+			padding: 96px 32px 40px; display: flex; flex-direction: column; border-left: 1px solid var(--line);
+		}
+		.mobile-menu.open { transform: translateX(0); box-shadow: -20px 0 50px -30px rgba(26,35,29,.4); }
+		.mobile-menu a { font-size: 1.2rem; font-weight: 500; padding: 15px 0; border-bottom: 1px solid var(--line); transition: color .2s; }
+		.mobile-menu a:hover { color: var(--lime-deep); }
+		.mobile-menu .btn { margin-top: 26px; justify-content: center; }
+		.scrim { position: fixed; inset: 0; background: rgba(26,35,29,.4); opacity: 0; visibility: hidden; transition: .3s; z-index: 98; }
+		.scrim.open { opacity: 1; visibility: visible; }
+
+		/* ============================================================
+		   HERO
+		   ============================================================ */
+		.hero { padding: clamp(7.5rem, 14vh, 10rem) 0 clamp(3rem, 6vw, 5rem); position: relative; }
+		.hero > .container { position: relative; z-index: 1; }
+		.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+		.hero-copy { max-width: 560px; }
+		.hero h1 { font-size: clamp(2.5rem, 5.4vw, 3.9rem); margin: 20px 0 0; letter-spacing: -0.03em; }
+		/* Surlignage marqueur réutilisable sur tous les titres */
+		.hl { color: var(--forest); background: linear-gradient(transparent 60%, rgba(159,197,18,.4) 60%, rgba(159,197,18,.4) 90%, transparent 90%); padding: 0 .05em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+		.hero p.lead { margin-top: 22px; font-size: 1.12rem; color: var(--muted); max-width: 48ch; }
+		.hero-actions { margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+		/* Preuve sociale */
+		.proof-cluster { margin-top: 34px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+		.proof-cluster .avatars { display: flex; }
+		.proof-cluster .avatars span { width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1px solid var(--line); margin-left: -12px; display: grid; place-items: center; padding: 6px; box-shadow: var(--shadow-xs); overflow: hidden; }
+		.proof-cluster .avatars span:first-child { margin-left: 0; }
+		.proof-cluster .avatars span img { max-width: 100%; max-height: 100%; object-fit: contain; }
+		.proof-cluster .avatars .more { font-size: .72rem; font-weight: 700; color: var(--muted); padding: 0; }
+		.proof-cluster .stars { display: flex; gap: 2px; }
+		.proof-cluster .stars svg { width: 16px; height: 16px; color: var(--amber); }
+		.proof-cluster .pt { font-size: .92rem; color: var(--muted); line-height: 1.35; }
+		.proof-cluster .pt b { color: var(--ink); font-weight: 700; }
+
+		/* Visuel hero — profondeur */
+		.hero-visual { position: relative; }
+		.hero-photo-wrap { position: relative; }
+		.hero-photo-wrap::before { content: ""; position: absolute; inset: 0; transform: translate(18px, 18px); background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius-lg); z-index: 0; }
+		.hero-photo { position: relative; z-index: 1; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--line); aspect-ratio: 4 / 4.3; }
+		.hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+		.hero-badge {
+			position: absolute; z-index: 2; background: rgba(255,255,255,.92);
+			backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+			border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow-md);
+		}
+		.hero-badge.b-top { top: 22px; left: -16px; padding: 9px 14px; display: flex; align-items: center; gap: 8px; font-size: .82rem; font-weight: 600; color: var(--ink); }
+		.hero-badge.b-top svg { width: 16px; height: 16px; color: var(--lime-deep); }
+		.hero-badge.b-bottom { bottom: 24px; left: -22px; padding: 13px 16px; display: flex; align-items: center; gap: 12px; }
+		.hero-badge.b-bottom .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--lime); color: var(--forest); display: grid; place-items: center; flex: none; }
+		.hero-badge.b-bottom .ic svg { width: 21px; height: 21px; }
+		.hero-badge.b-bottom .t { font-size: 1.25rem; font-weight: 800; color: var(--ink); line-height: 1; letter-spacing: -0.02em; }
+		.hero-badge.b-bottom .s { font-size: .76rem; color: var(--muted); margin-top: 2px; }
+
+		/* ============================================================
+		   STATS
+		   ============================================================ */
+		.stats-inner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+		.stat { background: var(--bg); padding: clamp(1.8rem, 4vw, 2.6rem) clamp(1.5rem, 3vw, 2.4rem); }
+		.stat .num { font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 800; line-height: 1; letter-spacing: -0.03em; color: var(--ink); display: flex; align-items: baseline; gap: 3px; }
+		.stat .num .suf { color: var(--lime-deep); font-size: .42em; font-weight: 700; }
+		.stat .lbl { margin-top: 12px; color: var(--muted); font-size: .98rem; max-width: 24ch; }
+
+		/* ============================================================
+		   MÉTIER (zig-zag)
+		   ============================================================ */
+		/* Promesse — déclaration centrée impactante */
+		.promesse { position: relative; text-align: center; padding: clamp(.5rem, 2vw, 1.5rem) 0 clamp(1rem, 3vw, 2rem); }
+		.promesse .peak { width: 38px; height: 38px; margin: 0 auto 20px; color: var(--lime); display: block; position: relative; z-index: 1; }
+		.promesse .eyebrow { position: relative; z-index: 1; }
+		.promesse-text { position: relative; z-index: 1; font-size: clamp(1.85rem, 3.9vw, 3.05rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.025em; max-width: 880px; margin: 16px auto 0; color: var(--ink); }
+		.promesse-text .em { color: var(--forest); }
+		.grid-bg.center { -webkit-mask-image: radial-gradient(68% 75% at 50% 50%, #000, transparent 74%); mask-image: radial-gradient(68% 75% at 50% 50%, #000, transparent 74%); }
+		.zig { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; margin-top: clamp(3rem, 6vw, 5rem); }
+		.zig.rev .zig-media { order: 2; }
+		.zig-media .frame { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--line); aspect-ratio: 5/4; }
+		.zig-media .frame img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease-out); }
+		.zig-media:hover .frame img { transform: scale(1.03); }
+		.zig-text h3 { font-size: clamp(1.55rem, 3.2vw, 2.1rem); }
+		.zig-text > p { margin-top: 16px; color: var(--muted); font-size: 1.05rem; }
+		.zig-list { list-style: none; margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+		.zig-list li { display: flex; gap: 12px; align-items: flex-start; color: var(--ink); font-size: 1rem; }
+		.zig-list li svg { width: 20px; height: 20px; color: var(--lime-deep); flex: none; margin-top: 3px; }
+		.zig-text .btn { margin-top: 28px; }
+
+		/* ============================================================
+		   ÉQUIPE
+		   ============================================================ */
+		.team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+		.member { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .35s var(--ease-out), box-shadow .35s var(--ease); }
+		.member:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+		.member .photo { aspect-ratio: 1/1.05; overflow: hidden; }
+		.member .photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease-out); }
+		.member:hover .photo img { transform: scale(1.03); }
+		.member .info { padding: 20px 20px 24px; }
+		.member .info h3 { font-size: 1.2rem; }
+		.member .role { display: inline-block; margin-top: 5px; font-size: .76rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime-deep); }
+		.member .bio { margin-top: 13px; font-size: .9rem; color: var(--muted); line-height: 1.55; }
+
+		/* ============================================================
+		   SERVICES
+		   ============================================================ */
+		.svc-block + .svc-block { margin-top: clamp(3rem, 6vw, 5rem); }
+		.svc-head { max-width: 640px; margin-bottom: 28px; }
+		.svc-head .idx { font-size: .85rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--lime-deep); }
+		.svc-head h3 { font-size: clamp(1.5rem, 3vw, 2rem); margin-top: 8px; }
+		.svc-head p { margin-top: 14px; color: var(--muted); font-size: 1.02rem; }
+
+		.svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+		.svc-item { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px 24px; transition: border-color .25s var(--ease), transform .3s var(--ease-out), box-shadow .3s var(--ease); }
+		.svc-item:hover { border-color: var(--line-2); transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+		.svc-item .ic { width: 44px; height: 44px; border-radius: 11px; background: var(--bg-soft); color: var(--forest); display: grid; place-items: center; }
+		.svc-item .ic svg { width: 23px; height: 23px; }
+		.svc-item h4 { margin-top: 18px; font-size: 1.12rem; }
+		.svc-item p { margin-top: 10px; font-size: .92rem; color: var(--muted); line-height: 1.55; }
+
+		/* ============================================================
+		   TÉMOIGNAGES
+		   ============================================================ */
+		.marquee { position: relative; margin: clamp(2rem,4vw,3rem) 0 clamp(2.5rem,5vw,3.5rem); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+		.marquee-track { display: flex; align-items: center; gap: 56px; width: max-content; animation: scroll 48s linear infinite; }
+		.marquee:hover .marquee-track { animation-play-state: paused; }
+		.marquee-track img { height: 38px; width: auto; object-fit: contain; filter: grayscale(1); opacity: .55; transition: opacity .25s, filter .25s; }
+		.marquee-track img:hover { filter: grayscale(0); opacity: 1; }
+		@keyframes scroll { to { transform: translateX(-50%); } }
+
+		.quotes-viewport { overflow: hidden; }
+		.quotes-track { display: flex; transition: transform .55s var(--ease-out); }
+		.quote { flex: 0 0 100%; padding: 0 3px; }
+		.quote-card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: clamp(2rem, 4vw, 3rem); display: grid; grid-template-columns: auto 1fr; gap: clamp(1.5rem, 4vw, 2.6rem); align-items: center; box-shadow: var(--shadow-sm); }
+		.quote-card .logo-box { width: 130px; height: 84px; background: var(--bg-soft); border-radius: 12px; display: grid; place-items: center; padding: 16px; }
+		.quote-card .logo-box img { max-height: 52px; max-width: 100px; object-fit: contain; }
+		.quote-card blockquote { font-size: clamp(1.15rem, 2.2vw, 1.5rem); line-height: 1.45; color: var(--ink); font-weight: 500; letter-spacing: -0.01em; }
+		.quote-card .mark { color: var(--lime-deep); font-size: 2.2rem; font-weight: 800; line-height: .6; display: block; }
+		.quote-card cite { display: block; margin-top: 16px; font-style: normal; font-size: .9rem; color: var(--muted-2); font-weight: 600; }
+		.quotes-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 28px; }
+		.q-arrow { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--bg); color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: .25s var(--ease-out); }
+		.q-arrow:hover { background: var(--forest); color: #fff; border-color: var(--forest); }
+		.q-arrow svg { width: 19px; height: 19px; }
+		.q-dots { display: flex; gap: 2px; margin: 0 6px; }
+		.q-dots button { width: 24px; height: 44px; border: none; background: transparent; cursor: pointer; padding: 0; position: relative; }
+		.q-dots button::before { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); transition: width .25s var(--ease-out), background .25s var(--ease-out); }
+		.q-dots button.active::before { background: var(--lime-deep); width: 22px; border-radius: 4px; }
+
+		/* ============================================================
+		   CONTACT
+		   ============================================================ */
+		.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.6rem,4vw,3rem); }
+		.contact-map { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-sm); min-height: 430px; }
+		.contact-map iframe { width: 100%; height: 100%; min-height: 430px; border: 0; display: block; filter: grayscale(.25); }
+		.contact-cards { display: flex; flex-direction: column; gap: 14px; }
+		.c-card { display: flex; gap: 16px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; transition: border-color .25s var(--ease), transform .3s var(--ease-out), box-shadow .3s var(--ease); }
+		.c-card:hover { border-color: var(--line-2); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+		.c-card:active { transform: scale(.99); transition-duration: .08s; }
+		.c-card .ic { width: 48px; height: 48px; border-radius: 12px; background: var(--bg-soft); color: var(--forest); display: grid; place-items: center; flex: none; }
+		.c-card .ic svg { width: 23px; height: 23px; }
+		.c-card .lbl { font-size: .76rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-2); }
+		.c-card .val { font-size: 1.08rem; color: var(--ink); font-weight: 600; margin-top: 2px; }
+		.contact-cta { background: var(--forest); border-radius: var(--radius); padding: 28px; color: var(--on-dark); }
+		.contact-cta h3 { color: #fff; font-size: 1.35rem; }
+		.contact-cta p { color: var(--on-dark-mut); margin: 8px 0 20px; font-size: .96rem; }
+
+		/* ============================================================
+		   FOOTER
+		   ============================================================ */
+		.footer { background: var(--forest); color: var(--on-dark-mut); padding: clamp(3.5rem,6vw,5rem) 0 0; }
+		.footer-top { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1.2fr; gap: 40px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.1); }
+		.footer .logo-text .l1 { color: #fff; } .footer .logo-text .l2 { color: var(--on-dark-mut); }
+		.footer .brand-p { margin-top: 18px; max-width: 34ch; font-size: .95rem; line-height: 1.6; }
+		.footer h4 { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #fff; margin-bottom: 18px; }
+		.footer ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+		.footer ul a { font-size: .95rem; transition: color .2s; }
+		.footer ul a:hover { color: var(--lime); }
+		.social { display: flex; flex-direction: column; gap: 12px; }
+		.social a { display: flex; align-items: center; gap: 11px; font-size: .92rem; transition: color .2s; }
+		.social a:hover { color: #fff; }
+		.social .ic { width: 36px; height: 36px; border-radius: 9px; background: rgba(255,255,255,.07); display: grid; place-items: center; flex: none; transition: .25s var(--ease-out); }
+		.social a:hover .ic { background: var(--lime); color: var(--forest); }
+		.social .ic svg { width: 17px; height: 17px; }
+		.footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 24px 0; font-size: .85rem; }
+
+		/* ============================================================
+		   REVEAL
+		   ============================================================ */
+		.reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); transition-delay: var(--d, 0ms); }
+		.reveal.in { opacity: 1; transform: none; }
+		@media (prefers-reduced-motion: reduce) {
+			.reveal { opacity: 1; transform: none; }
+			.marquee-track { animation: none !important; }
+			html { scroll-behavior: auto; }
+		}
+
+		/* ============================================================
+		   RESPONSIVE
+		   ============================================================ */
+		@media (max-width: 1040px) {
+			.team-grid { grid-template-columns: repeat(2, 1fr); }
+		}
+		@media (max-width: 860px) {
+			.nav-links, .nav-cta .btn { display: none; }
+			.burger { display: block; }
+			.hero-grid { grid-template-columns: 1fr; }
+			.hero-visual { max-width: 460px; margin: 8px auto 0; width: 100%; }
+			.zig, .zig.rev { grid-template-columns: 1fr; }
+			.zig.rev .zig-media { order: 0; }
+			.stats-inner { grid-template-columns: 1fr; }
+			.svc-grid { grid-template-columns: repeat(2, 1fr); }
+			.contact-grid { grid-template-columns: 1fr; }
+			.contact-map, .contact-map iframe { min-height: 320px; }
+			.quote-card { grid-template-columns: 1fr; }
+			.footer-top { grid-template-columns: 1fr 1fr; gap: 34px; }
+		}
+		@media (max-width: 540px) {
+			.container { padding: 0 20px; }
+			.svc-grid, .team-grid, .footer-top { grid-template-columns: 1fr; }
+		}
+	</style>
+</head>
+
+<body>
+	<!-- ============================ HEADER ============================ -->
+	<header class="header" id="header">
+		<div class="container">
+			<nav class="nav">
+				<a href="#hero" class="logo" aria-label="Alpes Ressources, accueil">
+					<svg class="logo-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+						<circle cx="24" cy="24" r="21" stroke="#1f3d30" stroke-width="2.2" stroke-dasharray="118 14" stroke-dashoffset="-6" />
+						<path d="M24 9 L34 37 L24 30 L14 37 Z" fill="#9fc512" />
+					</svg>
+					<span class="logo-text"><span class="l1">ALPES</span><span class="l2">RESSOURCES</span></span>
+				</a>
+				<ul class="nav-links">
+					<li><a href="#metier">Notre métier</a></li>
+					<li><a href="#equipe">L'équipe</a></li>
+					<li><a href="#services">Services</a></li>
+					<li><a href="#temoignages">Témoignages</a></li>
+					<li><a href="#contact">Contact</a></li>
+				</ul>
+				<div class="nav-cta">
+					<a href="#contact" class="btn btn-primary">Nous contacter
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+					</a>
+					<button class="burger" id="burger" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+				</div>
+			</nav>
+		</div>
+	</header>
+
+	<div class="scrim" id="scrim"></div>
+	<aside class="mobile-menu" id="mobileMenu">
+		<a href="#metier">Notre métier</a>
+		<a href="#equipe">L'équipe</a>
+		<a href="#services">Services</a>
+		<a href="#temoignages">Témoignages</a>
+		<a href="#contact">Contact</a>
+		<a href="#contact" class="btn btn-primary">Nous contacter</a>
+	</aside>
+
+	<main>
+		<!-- ============================ HERO ============================ -->
+		<section class="hero" id="hero">
+			<div class="grid-bg"></div>
+			<div class="container">
+				<div class="hero-grid">
+					<div class="hero-copy reveal">
+						<span class="eyebrow">Externalisation paie &amp; RH · Depuis 2008</span>
+						<h1>Le <span class="hl">service</span> avant tout.</h1>
+						<p class="lead">Au-delà de l'expertise métier, nous faisons de la qualité de service une priorité. Chaque demande est traitée vite et avec précision, par un collaborateur dédié à votre entreprise.</p>
+						<div class="hero-actions">
+							<a href="#contact" class="btn btn-primary">Nous contacter
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+							<a href="#metier" class="btn btn-ghost">Découvrir notre métier</a>
+						</div>
+						<div class="proof-cluster">
+							<div class="avatars">
+								<span><img src="img/Clients-logotypes/Pleiades.png" alt="Pléiades"></span>
+								<span><img src="img/Clients-logotypes/Carniel.png" alt="Carniel"></span>
+								<span><img src="img/Clients-logotypes/Eymard.png" alt="Eymard"></span>
+								<span><img src="img/Clients-logotypes/CMB.png" alt="CMB"></span>
+								<span class="more">+76</span>
+							</div>
+							<div>
+								<div class="stars" aria-label="5 étoiles sur 5">
+									<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+									<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+									<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+									<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+									<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+								</div>
+								<p class="pt"><b>80 entreprises</b> nous font confiance, souvent depuis 10&nbsp;ans.</p>
+							</div>
+						</div>
+					</div>
+					<div class="hero-visual reveal" style="--d:120ms">
+						<div class="hero-photo-wrap">
+							<div class="hero-badge b-top">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+								Vinay, Isère · Depuis 2008
+							</div>
+							<div class="hero-photo">
+								<img src="IMAGES EXEMPLES/P1013534.jpg" alt="Collaboratrice d'Alpes Ressources à son poste de travail">
+							</div>
+							<div class="hero-badge b-bottom">
+								<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/></svg></div>
+								<div><div class="t">+800</div><div class="s">paies / mois</div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================ STATS ============================ -->
+		<section class="container" style="padding-bottom: clamp(1rem,3vw,2rem)">
+			<div class="stats-inner reveal">
+				<div class="stat">
+					<div class="num"><span class="count" data-to="80">0</span></div>
+					<div class="lbl">entreprises clientes accompagnées</div>
+				</div>
+				<div class="stat">
+					<div class="num"><span class="count" data-to="17">0</span><span class="suf">ans</span></div>
+					<div class="lbl">d'expertise en paie et réglementation sociale</div>
+				</div>
+				<div class="stat">
+					<div class="num"><span class="count" data-to="800">0</span><span class="suf">/mois</span></div>
+					<div class="lbl">bulletins de paie produits chaque mois</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================ MÉTIER ============================ -->
+		<section class="section metier" id="metier">
+			<div class="grid-bg center"></div>
+			<div class="container">
+				<div class="promesse reveal">
+					<svg class="peak" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 8 L35 38 L24 30 L13 38 Z" fill="currentColor"/></svg>
+					<span class="eyebrow">Notre métier</span>
+					<p class="promesse-text">Accompagner les entreprises pour qu'elles répondent à leurs <span class="hl">obligations légales et conventionnelles</span> en matière de <span class="em">paie</span> et de <span class="em">réglementation sociale</span>.</p>
+				</div>
+
+				<div class="zig">
+					<div class="zig-media reveal"><div class="frame"><img src="IMAGES EXEMPLES/P1013573.jpg" alt="Gestion de la paie sur poste à double écran"></div></div>
+					<div class="zig-text reveal" style="--d:100ms">
+						<span class="eyebrow">Service paie</span>
+						<h3 style="margin-top:12px">Externalisation des paies</h3>
+						<p>Nos clients sont issus de tous les secteurs : industrie, BTP, entreprises agricoles, artisanat… Nous gérons aussi les particularités des Jeunes Entreprises Innovantes, des S.C.O.P. et des associations.</p>
+						<ul class="zig-list">
+							<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Production des bulletins, de l'embauche au solde de tout compte</li>
+							<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Gestion des absences et des déclarations sociales</li>
+							<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Spécialités MSA, JEI et conventions sectorielles</li>
+						</ul>
+						<a href="#services" class="btn btn-ghost">Voir les prestations</a>
+					</div>
+				</div>
+
+				<div class="zig rev">
+					<div class="zig-media reveal"><div class="frame"><img src="IMAGES EXEMPLES/P1013963.jpg" alt="Conseil RH entre deux collaborateurs"></div></div>
+					<div class="zig-text reveal" style="--d:100ms">
+						<span class="eyebrow">Conseil RH</span>
+						<h3 style="margin-top:12px">Management des ressources humaines</h3>
+						<p>Rédaction de chartes et d'accords d'entreprise, accompagnement des entretiens professionnels, mise en place et suivi du CSE, gestion des formations : nous vous appuyons sur l'ensemble de vos sujets RH.</p>
+						<ul class="zig-list">
+							<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Prestations ponctuelles ou récurrentes, selon vos besoins</li>
+							<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Conformité à la loi et aux particularités de votre entreprise</li>
+							<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Un interlocuteur dédié qui connaît votre dossier</li>
+						</ul>
+						<a href="#services" class="btn btn-ghost">Voir les prestations</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================ ÉQUIPE ============================ -->
+		<section class="section bg-soft" id="equipe">
+			<div class="container">
+				<div class="sec-head reveal">
+					<span class="eyebrow">L'équipe</span>
+					<h2>Des <span class="hl">interlocuteurs</span>, pas un standard.</h2>
+					<p>Nous avons créé <span class="accent">Alpes Ressources</span> en 2008, une société de services B-to-B spécialisée dans l'externalisation de la paie et le management des ressources humaines.</p>
+				</div>
+				<div class="team-grid">
+					<article class="member reveal">
+						<div class="photo"><img src="img/test/Brigitte.jpeg" alt="Brigitte Le Bail"></div>
+						<div class="info"><h3>Brigitte Le Bail</h3><span class="role">Gérante</span>
+							<p class="bio">Diplômée en Ressources Humaines, DRH d'une PME de 100 personnes pendant 6 ans avant de fonder Alpes Ressources. Spécialiste des jeunes entreprises innovantes et de la MSA.</p></div>
+					</article>
+					<article class="member reveal" style="--d:80ms">
+						<div class="photo"><img src="img/test/Olivier.jpeg" alt="Olivier Le Bail"></div>
+						<div class="info"><h3>Olivier Le Bail</h3><span class="role">Gérant</span>
+							<p class="bio">Trente ans d'expérience dans le bâtiment, l'industrie et le service aux entreprises, de l'opérationnel à la direction générale. Formé à la technique de la paie, spécialisé BTP.</p></div>
+					</article>
+					<article class="member reveal" style="--d:160ms">
+						<div class="photo"><img src="img/test/Vanessa.jpeg" alt="Vanessa Savigny"></div>
+						<div class="info"><h3>Vanessa Savigny</h3><span class="role">Collaboratrice</span>
+							<p class="bio">Comptable depuis plus de 20 ans, elle pilote plusieurs dossiers de paie pour assurer la polyvalence de l'équipe, avec une spécialisation dans les déclarations sociales.</p></div>
+					</article>
+					<article class="member reveal" style="--d:240ms">
+						<div class="photo"><img src="img/test/Camille.jpg" alt="Camille Vinier"></div>
+						<div class="info"><h3>Camille Vinier</h3><span class="role">Collaboratrice</span>
+							<p class="bio">Gestionnaire de paie arrivée en 2025, en charge de dossiers spécifiques tels que les affaires étrangères ou la MSA. Également en soutien sur l'accompagnement RH.</p></div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================ SERVICES ============================ -->
+		<section class="section" id="services">
+			<div class="container">
+				<div class="sec-head reveal">
+					<span class="eyebrow">Services</span>
+					<h2>Ce que la paie et les RH exigent, <span class="hl">pris en charge</span>.</h2>
+				</div>
+
+				<div class="svc-block">
+					<div class="svc-head reveal">
+						<span class="idx">01 — Paie</span>
+						<h3>Externalisation de la paie</h3>
+						<p>Nous prenons en charge l'intégralité des prestations liées à la paie, quelles que soient la taille, l'activité ou la forme juridique de votre société.</p>
+					</div>
+					<div class="svc-grid">
+						<div class="svc-item reveal">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 9h1M9 13h6M9 17h6"/></svg></div>
+							<h4>Un service adapté</h4>
+							<p>Spécialistes depuis 2008, nous produisons vos bulletins de salaire sur mesure, avec un collaborateur dédié à chaque dossier.</p>
+						</div>
+						<div class="svc-item reveal" style="--d:80ms">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg></div>
+							<h4>La gestion des salariés</h4>
+							<p>Toutes les démarches liées à la vie du salarié, de l'embauche à la sortie, y compris absences et déclarations sociales.</p>
+						</div>
+						<div class="svc-item reveal" style="--d:160ms">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
+							<h4>Une veille constante</h4>
+							<p>Notre équipe suit en permanence les évolutions légales et conventionnelles pour garantir la conformité de vos paies.</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="svc-block">
+					<div class="svc-head reveal">
+						<span class="idx">02 — Ressources humaines</span>
+						<h3>Accompagnement RH</h3>
+						<p>Nous vous accompagnons sur vos problématiques ressources humaines, de façon ponctuelle ou récurrente. Nous intervenons notamment pour&nbsp;:</p>
+					</div>
+					<div class="svc-grid">
+						<div class="svc-item reveal">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+							<h4>Rédaction de charte</h4>
+							<p>Accords ou chartes d'entreprise : égalité femmes-hommes, télétravail, annualisation, etc.</p>
+						</div>
+						<div class="svc-item reveal" style="--d:80ms">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/></svg></div>
+							<h4>Conduite des entretiens</h4>
+							<p>Mise en place des entretiens professionnels, accompagnement et formation de l'encadrement.</p>
+						</div>
+						<div class="svc-item reveal" style="--d:160ms">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h4"/></svg></div>
+							<h4>Règlement intérieur</h4>
+							<p>Rédaction du règlement intérieur conforme à la loi, adaptée aux particularités de l'entreprise.</p>
+						</div>
+						<div class="svc-item reveal">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 22 2l-9 19-2-8-8-2Z"/></svg></div>
+							<h4>Mise en place du CSE</h4>
+							<p>Comité Social et Économique : organisation des élections et accompagnement de la gestion du Comité.</p>
+						</div>
+						<div class="svc-item reveal" style="--d:80ms">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5"/></svg></div>
+							<h4>Gestion des formations</h4>
+							<p>Établissement des besoins, demande des financements et suivi de votre plan de formation.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================ TÉMOIGNAGES ============================ -->
+		<section class="section bg-soft" id="temoignages">
+			<div class="container">
+				<div class="sec-head reveal">
+					<span class="eyebrow">Témoignages</span>
+					<h2>Ils nous font <span class="hl">confiance</span>, souvent depuis plus de 10 ans.</h2>
+				</div>
+			</div>
+
+			<div class="marquee reveal">
+				<div class="marquee-track" id="marqueeTrack">
+					<img src="img/Clients-logotypes/Alme.png" alt="Alme">
+					<img src="img/Clients-logotypes/Carniel.png" alt="Carniel">
+					<img src="img/Clients-logotypes/Caroen.png" alt="Caroen">
+					<img src="img/Clients-logotypes/Cecillon.png" alt="Cecillon">
+					<img src="img/Clients-logotypes/CMB.png" alt="CMB">
+					<img src="img/Clients-logotypes/Eymard.png" alt="Eymard">
+					<img src="img/Clients-logotypes/ma-bouteille.png" alt="Ma Bouteille">
+					<img src="img/Clients-logotypes/Pleiades.png" alt="Pléiades">
+					<img src="img/Clients-logotypes/Inovotion.png" alt="Inovotion">
+					<img src="img/Clients-logotypes/Millon.png" alt="Millon">
+					<img src="img/Clients-logotypes/ordona.png" alt="Ordona">
+					<img src="img/Clients-logotypes/broche.png" alt="Broche">
+				</div>
+			</div>
+
+			<div class="container">
+				<div class="quotes reveal">
+					<div class="quotes-viewport">
+						<div class="quotes-track" id="quotesTrack">
+							<div class="quote"><div class="quote-card">
+								<div class="logo-box"><img src="img/Clients-logotypes/Pleiades.png" alt="Pléiades"></div>
+								<div><span class="mark">“</span><blockquote>Depuis plus de 10 ans que nous travaillons avec Alpes Ressources, nous sommes entièrement satisfaits de la qualité de services, des conseils et de la réactivité. Un partenaire efficace&nbsp;!</blockquote><cite>Pléiades</cite></div>
+							</div></div>
+							<div class="quote"><div class="quote-card">
+								<div class="logo-box"><img src="img/Clients-logotypes/Inovotion.png" alt="Inovotion"></div>
+								<div><span class="mark">“</span><blockquote>Grande réactivité, échanges fluides, conseils juridiques pertinents. Un prestataire social efficace, à dimension humaine, qui sait écouter et s'adapter.</blockquote><cite>Inovotion</cite></div>
+							</div></div>
+							<div class="quote"><div class="quote-card">
+								<div class="logo-box"><img src="img/Clients-logotypes/Millon.png" alt="Millon"></div>
+								<div><span class="mark">“</span><blockquote>Olivier a repris le dossier de notre salarié point par point et a tout remis en ordre. De très bons conseils, avec clarté et simplicité.</blockquote><cite>Millon</cite></div>
+							</div></div>
+							<div class="quote"><div class="quote-card">
+								<div class="logo-box"><img src="img/Clients-logotypes/ma-bouteille.png" alt="Ma Bouteille s'appelle Reviens"></div>
+								<div><span class="mark">“</span><blockquote>En tant qu'entreprise d'insertion, nous avons besoin d'une grande réactivité et de pédagogie, dont Alpes Ressources fait preuve.</blockquote><cite>Ma Bouteille s'appelle Reviens</cite></div>
+							</div></div>
+							<div class="quote"><div class="quote-card">
+								<div class="logo-box"><img src="img/Clients-logotypes/ordona.png" alt="Ordona"></div>
+								<div><span class="mark">“</span><blockquote>Proximité et expertise : Alpes Ressources nous accompagne au mieux sur tous les sujets liés au développement du capital humain.</blockquote><cite>Ordona</cite></div>
+							</div></div>
+						</div>
+					</div>
+					<div class="quotes-nav">
+						<button class="q-arrow" id="qPrev" aria-label="Témoignage précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+						<div class="q-dots" id="qDots"></div>
+						<button class="q-arrow" id="qNext" aria-label="Témoignage suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ============================ CONTACT ============================ -->
+		<section class="section" id="contact">
+			<div class="container">
+				<div class="sec-head reveal">
+					<span class="eyebrow">Contact</span>
+					<h2>Parlons de <span class="hl">votre entreprise</span>.</h2>
+					<p>Un projet d'externalisation, une question sur la paie ou les RH&nbsp;? Écrivez-nous ou passez nous voir à Vinay.</p>
+				</div>
+				<div class="contact-grid">
+					<div class="contact-map reveal">
+						<iframe title="Carte Alpes Ressources" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2810.996848692414!2d5.411563315548859!3d45.207399279098745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478ac0ff96440295%3A0xc6952754274a902c!2sAlpes%20Ressources!5e0!3m2!1sfr!2sfr!4v1680468031151!5m2!1sfr!2sfr"></iframe>
+					</div>
+					<div class="contact-cards reveal" style="--d:100ms">
+						<a class="c-card" href="tel:0476384153">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"/></svg></div>
+							<div><div class="lbl">Nous appeler</div><div class="val">04 76 38 41 53</div></div>
+						</a>
+						<a class="c-card" href="mailto:contact@alpes-ressources.com">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></div>
+							<div><div class="lbl">Nous écrire</div><div class="val">contact@alpes-ressources.com</div></div>
+						</a>
+						<a class="c-card" target="_blank" rel="noopener" href="https://www.google.com/maps?ll=45.207898,5.408152&z=17&t=m&hl=fr&gl=FR&mapclient=embed&cid=14309386633429553196">
+							<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+							<div><div class="lbl">Notre adresse</div><div class="val">45 rue Paul Guerry, 38470 Vinay</div></div>
+						</a>
+						<div class="contact-cta">
+							<h3>Externalisez l'esprit tranquille.</h3>
+							<p>Un premier échange, sans engagement, pour cerner vos besoins en paie et en RH.</p>
+							<a href="mailto:contact@alpes-ressources.com" class="btn btn-lime">Démarrer la conversation
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- ============================ FOOTER ============================ -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-top">
+				<div>
+					<div class="logo">
+						<svg class="logo-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+							<circle cx="24" cy="24" r="21" stroke="#ffffff" stroke-width="2.2" stroke-dasharray="118 14" stroke-dashoffset="-6" />
+							<path d="M24 9 L34 37 L24 30 L14 37 Z" fill="#9fc512" />
+						</svg>
+						<span class="logo-text"><span class="l1">ALPES</span><span class="l2">RESSOURCES</span></span>
+					</div>
+					<p class="brand-p">Société de services B-to-B spécialisée dans l'externalisation de la paie et le management des ressources humaines. Le service avant tout, depuis 2008.</p>
+				</div>
+				<div>
+					<h4>Navigation</h4>
+					<ul>
+						<li><a href="#hero">Accueil</a></li>
+						<li><a href="#metier">Notre métier</a></li>
+						<li><a href="#equipe">L'équipe</a></li>
+						<li><a href="#services">Services</a></li>
+						<li><a href="#contact">Contact</a></li>
+					</ul>
+				</div>
+				<div>
+					<h4>Informations</h4>
+					<ul>
+						<li><a href="mentions-legales.html#credits" target="_blank">Crédits</a></li>
+						<li><a href="mentions-legales.html#mentions" target="_blank">Mentions légales</a></li>
+						<li><a href="mentions-legales.html#prop" target="_blank">Propriété intellectuelle</a></li>
+					</ul>
+				</div>
+				<div>
+					<h4>Suivez-nous</h4>
+					<div class="social">
+						<a target="_blank" rel="noopener" href="https://www.facebook.com/Alpes-Ressources-205218192168/">
+							<span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5h2.2V5.3A29 29 0 0 0 13.4 5C10.9 5 9.3 6.5 9.3 9.2v2.1H6.7v3.2h2.6V22h3.4v-7.5h2.5l.4-3.2h-2.9V9.5c0-.7.3-1 1.3-1Z"/></svg></span>
+							Alpes Ressources
+						</a>
+						<a target="_blank" rel="noopener" href="https://www.linkedin.com/in/brigitte-le-bail-6704a417b/">
+							<span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 8.5v9H4v-9h2.5ZM5.2 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM20 17.5h-2.5v-4.7c0-1.2-.4-2-1.5-2-1 0-1.5.6-1.7 1.3-.1.2-.1.5-.1.8v4.6H11.7s.1-7.7 0-9h2.5v1.3c.3-.5 1-1.3 2.5-1.3 1.8 0 3.3 1.2 3.3 3.8v5.2Z"/></svg></span>
+							Brigitte Le Bail
+						</a>
+						<a target="_blank" rel="noopener" href="https://www.linkedin.com/in/olivier-le-bail-909706230/">
+							<span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 8.5v9H4v-9h2.5ZM5.2 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM20 17.5h-2.5v-4.7c0-1.2-.4-2-1.5-2-1 0-1.5.6-1.7 1.3-.1.2-.1.5-.1.8v4.6H11.7s.1-7.7 0-9h2.5v1.3c.3-.5 1-1.3 2.5-1.3 1.8 0 3.3 1.2 3.3 3.8v5.2Z"/></svg></span>
+							Olivier Le Bail
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<span>© <span id="year"></span> Alpes Ressources — Externalisation de la paie &amp; RH.</span>
+				<span>45 rue Paul Guerry · 38470 Vinay · Isère</span>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		document.getElementById('year').textContent = new Date().getFullYear();
+
+		const header = document.getElementById('header');
+		const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+
+		const burger = document.getElementById('burger');
+		const menu = document.getElementById('mobileMenu');
+		const scrim = document.getElementById('scrim');
+		const toggleMenu = (open) => {
+			burger.classList.toggle('open', open);
+			menu.classList.toggle('open', open);
+			scrim.classList.toggle('open', open);
+			document.body.style.overflow = open ? 'hidden' : '';
+		};
+		burger.addEventListener('click', () => toggleMenu(!menu.classList.contains('open')));
+		scrim.addEventListener('click', () => toggleMenu(false));
+		menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
+
+		const io = new IntersectionObserver((entries) => {
+			entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+		}, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+		document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+		const easeOut = t => 1 - Math.pow(1 - t, 3);
+		const runCount = (el) => {
+			const to = +el.dataset.to, dur = 1500, start = performance.now();
+			const step = (now) => {
+				const p = Math.min((now - start) / dur, 1);
+				el.textContent = Math.round(easeOut(p) * to).toLocaleString('fr-FR');
+				if (p < 1) requestAnimationFrame(step);
+			};
+			requestAnimationFrame(step);
+		};
+		const countIO = new IntersectionObserver((entries) => {
+			entries.forEach(e => { if (e.isIntersecting) { runCount(e.target); countIO.unobserve(e.target); } });
+		}, { threshold: 0.6 });
+		document.querySelectorAll('.count').forEach(el => countIO.observe(el));
+
+		const mt = document.getElementById('marqueeTrack');
+		mt.innerHTML += mt.innerHTML;
+
+		(function () {
+			const track = document.getElementById('quotesTrack');
+			const slides = track.children.length;
+			const dotsWrap = document.getElementById('qDots');
+			let i = 0, timer;
+			for (let s = 0; s < slides; s++) {
+				const b = document.createElement('button');
+				b.setAttribute('aria-label', 'Témoignage ' + (s + 1));
+				b.addEventListener('click', () => { go(s); reset(); });
+				dotsWrap.appendChild(b);
+			}
+			const dots = [...dotsWrap.children];
+			const go = (n) => {
+				i = (n + slides) % slides;
+				track.style.transform = `translateX(-${i * 100}%)`;
+				dots.forEach((d, k) => d.classList.toggle('active', k === i));
+			};
+			const next = () => go(i + 1), prev = () => go(i - 1);
+			const reset = () => { clearInterval(timer); timer = setInterval(next, 6500); };
+			document.getElementById('qNext').addEventListener('click', () => { next(); reset(); });
+			document.getElementById('qPrev').addEventListener('click', () => { prev(); reset(); });
+			go(0); reset();
+		})();
+	</script>
+</body>
+
+</html>
